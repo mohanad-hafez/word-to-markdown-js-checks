@@ -1,0 +1,574 @@
+{
+  "id": "dfe36b37",
+  "task": "stale",
+  "cases": [
+    {
+      "id": "fresh-issue",
+      "partition": "development",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 1,
+            "state": "open",
+            "created_at": "2026-11-05T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "warn-at-sixty-days",
+      "partition": "development",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 2,
+            "state": "open",
+            "created_at": "2026-09-08T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [
+          "add_labels",
+          "add_comment"
+        ],
+        "affected_issues": [
+          2
+        ]
+      }
+    },
+    {
+      "id": "close-at-fourteen-days",
+      "partition": "development",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 3,
+            "state": "open",
+            "created_at": "2026-08-09T12:00:00.000Z",
+            "labels": [
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-24T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [
+          "add_comment",
+          "close_issue"
+        ],
+        "affected_issues": [
+          3
+        ]
+      }
+    },
+    {
+      "id": "just-before-warning",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 4,
+            "state": "open",
+            "created_at": "2026-09-08T12:00:01.000Z",
+            "labels": [],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "just-before-closing",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 5,
+            "state": "open",
+            "created_at": "2026-08-09T12:00:00.000Z",
+            "labels": [
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-24T12:00:01.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "recent-comment",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 6,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": [
+              {
+                "event": "commented",
+                "created_at": "2026-11-05T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "recent-reference",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 7,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": [
+              {
+                "event": "cross-referenced",
+                "created_at": "2026-11-06T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "recent-label-change",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 8,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": [
+              {
+                "event": "labeled",
+                "created_at": "2026-11-06T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "stale-recent-activity",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 9,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-08T12:00:00.000Z"
+              },
+              {
+                "event": "commented",
+                "created_at": "2026-11-06T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "closed-issue",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 10,
+            "state": "closed",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-warning-pinned",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "pinned"
+            ],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-closing-pinned",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "pinned",
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-08T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-warning-security",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "security"
+            ],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-closing-security",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "security",
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-08T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-warning-help wanted",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "help wanted"
+            ],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-closing-help wanted",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "help wanted",
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-08T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-warning-good first issue",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "good first issue"
+            ],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "protected-closing-good first issue",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 11,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "good first issue",
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-08T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    },
+    {
+      "id": "oldest-first",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 20,
+            "state": "open",
+            "created_at": "2026-09-07T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          },
+          {
+            "number": 30,
+            "state": "open",
+            "created_at": "2026-05-11T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          },
+          {
+            "number": 10,
+            "state": "open",
+            "created_at": "2026-08-09T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [
+          "add_labels",
+          "add_comment",
+          "add_labels",
+          "add_comment",
+          "add_labels",
+          "add_comment"
+        ],
+        "affected_issues": [
+          30,
+          10,
+          20
+        ]
+      }
+    },
+    {
+      "id": "snapshot-step-separation",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 1,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": []
+          },
+          {
+            "number": 2,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [
+              "stale"
+            ],
+            "timeline": [
+              {
+                "event": "labeled",
+                "label": "stale",
+                "created_at": "2026-10-18T12:00:00.000Z"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [
+          "add_labels",
+          "add_comment",
+          "add_comment",
+          "close_issue"
+        ],
+        "affected_issues": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": "exclude-pull-request",
+      "partition": "held_out",
+      "input": {
+        "now": "2026-11-07T12:00:00.000Z",
+        "issues": [
+          {
+            "number": 1,
+            "state": "open",
+            "created_at": "2026-07-30T12:00:00.000Z",
+            "labels": [],
+            "timeline": [],
+            "pull_request": {
+              "url": "https://example.invalid/pr/1"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "action_kinds": [],
+        "affected_issues": []
+      }
+    }
+  ]
+}
